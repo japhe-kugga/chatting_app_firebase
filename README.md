@@ -22,4 +22,4 @@ This is a collaborative project developed by a dedicated team of 9 people. Each 
 ### ⚙️ Installation & Setup
 1. **Clone the project:**
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/chatting_app_firebase.git](https://github.com/japhe_kuga/chatting_app_firebase.git)
+   git clone [https://github.com/YOUR_USERNAME/chatting_app_firebase.git](https://github.com/japhe_kugga/chatting_app_firebase.git)
