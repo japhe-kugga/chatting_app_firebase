@@ -7,6 +7,9 @@ This is a collaborative project developed by a dedicated team of 9 people. Each 
 
 ## 🚀 Key Features
 * **Real-time Chat:** Instant messaging using Firestore Streams.
+HEAD
+# Participated in real time chatting app using firestore database(Anold Alpha)
+
 * **Cloud Notifications:** Push notifications with sound and pop-up support using FCM.
 * **Authentication:** Secure Email/Password login via Firebase Auth.
 * **Loading States:** Smooth UI experience with authentication loaders.
