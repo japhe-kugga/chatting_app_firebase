@@ -171,36 +171,36 @@ class _ChatPageState extends State<ChatPage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<int?>(
-        stream: _chatService.getChatBackgroundColorStream(),
-        builder: (context, snapshot) {
-          // If snapshot has data, it means Firestore has loaded. Update local state if needed (optional)
-          // But mainly we use it to construct the UI
-          if (snapshot.hasData && snapshot.data != null) {
-            _backgroundColor = Color(snapshot.data!);
-          }
+      stream: _chatService.getChatBackgroundColorStream(),
+      builder: (context, snapshot) {
+        // Update local background color if data is available from stream
+        if (snapshot.hasData && snapshot.data != null) {
+          _backgroundColor = Color(snapshot.data!);
+        }
 
-          return Scaffold(
-            backgroundColor:
-                _backgroundColor ?? Theme.of(context).colorScheme.surface,
-            appBar: AppBar(
-              title: Text(widget.receiverEmail),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              foregroundColor: Colors.grey,
-            ),
-            body: Column(
-              children: [
-                // messages
-                Expanded(
-                  child: _buildMessageList(),
-                ),
+        return Scaffold(
+          backgroundColor:
+              _backgroundColor ?? Theme.of(context).colorScheme.surface,
+          appBar: AppBar(
+            title: Text(widget.receiverEmail),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: Theme.of(context).colorScheme.primary,
+          ),
+          body: Column(
+            children: [
+              // messages list
+              Expanded(
+                child: _buildMessageList(),
+              ),
 
-                // user input
-                _buildUserInput(),
-              ],
-            ),
-          );
-        });
+              // user input field
+              _buildUserInput(),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   // build message list

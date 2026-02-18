@@ -58,16 +58,14 @@ class ChatService {
     return null;
   }
 
-  // GET ALL USERS STREAM
+  // GET ALL USERS STREAM EXCLUDING CURRENT USER
   Stream<List<Map<String, dynamic>>> getUsersStream() {
+    final String? currentUserId = _auth.currentUser?.uid;
     return _firestore.collection('users').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        // go through each individual user
-        final user = doc.data();
-
-        // return user
-        return user;
-      }).toList();
+      return snapshot.docs
+          .map((doc) => doc.data())
+          .where((user) => user['uid'] != currentUserId)
+          .toList();
     });
   }
 
@@ -76,7 +74,7 @@ class ChatService {
     // get current user info
     final String currentUserId = _auth.currentUser!.uid;
     final String currentUserEmail = _auth.currentUser!.email!;
-    final Timestamp timestamp = Timestamp.now();
+    final dynamic timestamp = FieldValue.serverTimestamp();
 
     // create a new message
     Message newMessage = Message(

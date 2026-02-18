@@ -2,50 +2,56 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/foundation.dart';
 
+const String kNotificationChannelId = 'high_importance_channel';
+
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  // Initialize notifications
+  /// Initialize all notification settings
   Future<void> initialize() async {
-    // Request permission for notifications
+    // Request user permissions
     await _requestPermission();
 
-    // Initialize local notifications
+    // Setup local notification settings for Android and iOS
     await _initLocalNotifications();
 
-    // Configure FCM listeners
+    // Set foreground notification options for iOS
+    await _firebaseMessaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    // Configure foreground listeners
     _configureFCM();
 
-    // Automatically fetch and print the token during initialization
+    // Fetch and display the device token for testing
     await getDeviceToken();
   }
 
-  // Request permissions
+  /// Request notification permissions from the user
   Future<void> _requestPermission() async {
-    await _firebaseMessaging.requestPermission(
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
-      announcement: false,
       badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
       sound: true,
     );
+    if (kDebugMode) {
+      debugPrint('User granted permission: ${settings.authorizationStatus}');
+    }
   }
 
-  // Initialize local notifications for heads-up display in foreground
+  /// Initialize local notification plugins for foreground pop-ups
   Future<void> _initLocalNotifications() async {
-    if (kIsWeb) {
-      return;
-    }
+    if (kIsWeb) return;
 
-    // Android initialization
+    // Android specific settings
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    // iOS initialization
+    // iOS/Darwin specific settings
     const DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -61,23 +67,24 @@ class NotificationService {
 
     await _flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) {
-        // Handle notification tap logic here
+      onDidReceiveNotificationResponse: (NotificationResponse details) {
+        // Handle logic when a user taps on the notification
       },
     );
 
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+    // Create the High Importance Channel for Android devices
+    if (defaultTargetPlatform == TargetPlatform.android) {
       await _createAndroidNotificationChannel();
     }
   }
 
+  /// Create a high importance channel to ensure pop-up/heads-up display
   Future<void> _createAndroidNotificationChannel() async {
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'high_importance_channel',
+      kNotificationChannelId,
       'High Importance Notifications',
       description: 'This channel is used for important notifications.',
-      importance: Importance.max,
+      importance: Importance.max, // Mandatory for pop-ups
       playSound: true,
       enableVibration: true,
     );
@@ -88,39 +95,40 @@ class NotificationService {
         ?.createNotificationChannel(channel);
   }
 
-  // Configure FCM listeners
+  /// Configure FCM listeners for foreground and background interactions
   void _configureFCM() {
+    // Listener for when the app is in the foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
-        _showLocalNotification(message);
+        showLocalNotification(message);
       }
     });
 
+    // Listener for when the app is opened via a notification tap
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // Handle notification tap opening app
+      if (kDebugMode) {
+        debugPrint("App opened from notification");
+      }
     });
   }
 
-  // Show a local notification
-  Future<void> _showLocalNotification(RemoteMessage message) async {
-    if (kIsWeb) return;
-
+  /// Manually trigger a local notification to show the pop-up
+  Future<void> showLocalNotification(RemoteMessage message) async {
     final RemoteNotification? notification = message.notification;
-    final AndroidNotification? android = message.notification?.android;
 
-    if (notification != null && android != null) {
+    if (notification != null) {
       await _flutterLocalNotificationsPlugin.show(
         id: notification.hashCode,
         title: notification.title,
         body: notification.body,
         notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
-            'high_importance_channel',
+            kNotificationChannelId,
             'High Importance Notifications',
-            channelDescription:
-                'This channel is used for important notifications.',
-            importance: Importance.max,
+            channelDescription: 'Important notifications channel.',
+            importance: Importance.max, // Required for pop-up
             priority: Priority.high,
+            ticker: 'ticker',
             icon: '@mipmap/ic_launcher',
             playSound: true,
             enableVibration: true,
@@ -131,35 +139,24 @@ class NotificationService {
             presentSound: true,
           ),
         ),
-        payload: message.data.toString(),
       );
     }
   }
 
-  // Get FCM Token and PRINT it to Debug Console
+  /// Fetch the FCM Device Token and print it to the Debug Console
   Future<String?> getDeviceToken() async {
     try {
-      String? token;
-      if (kIsWeb) {
-        token = await _firebaseMessaging.getToken(
-            vapidKey:
-                'BN-GDZa4Tbe067iE_8HeLGr9qskCLr8xYai5CLGqKCPK0SiqQ3R4lHOVM14EZc_u4sFNI3omQUsg9jDeE_Qykdw');
-      } else {
-        token = await _firebaseMessaging.getToken();
+      String? token = await _firebaseMessaging.getToken();
+      if (token != null && kDebugMode) {
+        debugPrint("*********************************************");
+        debugPrint("YOUR FCM TOKEN IS: $token");
+        debugPrint("*********************************************");
       }
-
-      // THIS IS THE IMPORTANT PART: Printing the token so you can see it
-      if (token != null) {
-        print("*********************************************");
-        print("YOUR FCM TOKEN IS: $token");
-        print("*********************************************");
-      } else {
-        print("FCM Token is null. Check your VAPID key or Firebase setup.");
-      }
-
       return token;
     } catch (e) {
-      print("Error getting device token: $e");
+      if (kDebugMode) {
+        debugPrint("Error getting device token: $e");
+      }
       return null;
     }
   }

@@ -25,12 +25,16 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: isCurrentUser ? Colors.green : Colors.grey[500],
+        color: isCurrentUser
+            ? Theme.of(context).colorScheme.primary
+            : (isDark ? Colors.grey[800] : Colors.grey[300]),
         borderRadius: BorderRadius.circular(12),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       margin: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 25),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -39,30 +43,42 @@ class ChatBubble extends StatelessWidget {
         children: [
           Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Flexible(
                 child: Text(
                   message,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              if (isCurrentUser)
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Icon(
-                    Icons.done_all,
-                    color: isSeen ? Colors.blue : Colors.grey,
-                    size: 16,
+                  style: TextStyle(
+                    color: isCurrentUser
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : (isDark ? Colors.white : Colors.black),
+                    fontSize: 16,
                   ),
                 ),
+              ),
+              if (isCurrentUser) ...[
+                const SizedBox(width: 8),
+                Icon(
+                  Icons.done_all,
+                  color: isSeen
+                      ? (isDark ? Colors.blue[300] : Colors.blue[700])
+                      : (isDark ? Colors.white54 : Colors.black54),
+                  size: 16,
+                ),
+              ],
             ],
           ),
           const SizedBox(height: 4),
           Text(
             _formatTime(timestamp),
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 12,
+            style: TextStyle(
+              color: isCurrentUser
+                  ? Theme.of(context)
+                      .colorScheme
+                      .onPrimary
+                      .withValues(alpha: 0.7)
+                  : (isDark ? Colors.white60 : Colors.black54),
+              fontSize: 11,
             ),
           ),
         ],

@@ -120,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   setState(() {
                     _selectedColor = color;
                   });
-                  _saveColor(color.value);
+                  _saveColor(color.toARGB32());
                 },
               ),
             );

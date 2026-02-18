@@ -12,15 +12,17 @@ class UserTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(
         leading: CircleAvatar(
           radius: 24,
-          backgroundColor: Colors.blue.shade400,
-          child: const Icon(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          child: Icon(
             Icons.person,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.onPrimary,
             size: 24,
           ),
         ),
@@ -34,13 +36,15 @@ class UserTile extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        tileColor: Colors.grey.shade50,
+        tileColor: isDark
+            ? Theme.of(context).colorScheme.surfaceContainerHighest
+            : Colors.grey.shade100,
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 16,
-          color: Colors.grey.shade400,
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
         ),
       ),
     );
