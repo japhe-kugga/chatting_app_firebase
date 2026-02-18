@@ -2,6 +2,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/foundation.dart';
 
+/// Top-level background message handler
+/// This must be outside the class to work when the app is terminated or in the background
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // Handle the background message here
+  print("Handling a background message: ${message.messageId}");
+}
+
 const String kNotificationChannelId = 'high_importance_channel';
 
 class NotificationService {
@@ -17,12 +25,8 @@ class NotificationService {
     // Setup local notification settings for Android and iOS
     await _initLocalNotifications();
 
-    // Set foreground notification options for iOS
-    await _firebaseMessaging.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    // Register the background message handler
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // Configure foreground listeners
     _configureFCM();
@@ -38,9 +42,7 @@ class NotificationService {
       badge: true,
       sound: true,
     );
-    if (kDebugMode) {
-      debugPrint('User granted permission: ${settings.authorizationStatus}');
-    }
+    print('User granted permission: ${settings.authorizationStatus}');
   }
 
   /// Initialize local notification plugins for foreground pop-ups
@@ -53,12 +55,7 @@ class NotificationService {
 
     // iOS/Darwin specific settings
     const DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
-
+        DarwinInitializationSettings();
     const InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
@@ -106,9 +103,7 @@ class NotificationService {
 
     // Listener for when the app is opened via a notification tap
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (kDebugMode) {
-        debugPrint("App opened from notification");
-      }
+      print("App opened from notification");
     });
   }
 
@@ -133,11 +128,7 @@ class NotificationService {
             playSound: true,
             enableVibration: true,
           ),
-          iOS: DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
+          iOS: DarwinNotificationDetails(),
         ),
       );
     }
@@ -147,16 +138,14 @@ class NotificationService {
   Future<String?> getDeviceToken() async {
     try {
       String? token = await _firebaseMessaging.getToken();
-      if (token != null && kDebugMode) {
-        debugPrint("*********************************************");
-        debugPrint("YOUR FCM TOKEN IS: $token");
-        debugPrint("*********************************************");
+      if (token != null) {
+        print("*********************************************");
+        print("YOUR FCM TOKEN IS: $token");
+        print("*********************************************");
       }
       return token;
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint("Error getting device token: $e");
-      }
+      print("Error getting device token: $e");
       return null;
     }
   }
