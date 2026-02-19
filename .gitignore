@@ -1,4 +1,13 @@
-# Miscellaneous
+# Ignore large binaries accidentally added
+firebase.exe
+chatting_app_firebase.zip
+
+# Optional: common build/artifact ignores
+/.gradle
+/build
+/.dart_tool
+/.idea
+*.iml# Miscellaneous
 *.class
 *.log
 *.pyc
