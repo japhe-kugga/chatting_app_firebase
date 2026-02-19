@@ -4,11 +4,7 @@ class UserTile extends StatelessWidget {
   final String text;
   final void Function()? onTap;
 
-  const UserTile({
-    super.key,
-    required this.text,
-    required this.onTap,
-  });
+  const UserTile({super.key, required this.text, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +24,9 @@ class UserTile extends StatelessWidget {
         ),
         title: Text(
           text,
-          style: const TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         tileColor: isDark
             ? Theme.of(context).colorScheme.surfaceContainerHighest
             : Colors.grey.shade100,
@@ -43,7 +34,7 @@ class UserTile extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         trailing: Icon(
           Icons.arrow_forward_ios,
-          size: 16,
+          size: 15,
           color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
         ),
       ),
