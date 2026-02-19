@@ -24,10 +24,7 @@ class HomePage extends StatelessWidget {
         title: const Text('Home'),
         actions: [
           // logout button
-          IconButton(
-            onPressed: logout,
-            icon: const Icon(Icons.logout),
-          )
+          IconButton(onPressed: logout, icon: const Icon(Icons.logout)),
         ],
       ),
       drawer: _buildDrawer(context),
@@ -42,9 +39,7 @@ class HomePage extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue.shade400,
-            ),
+            decoration: BoxDecoration(color: Colors.blue.shade400),
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +49,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Menu',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.blue,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -114,7 +109,9 @@ class HomePage extends StatelessWidget {
 
   // build individual list tile for user
   Widget _buildUserListItem(
-      Map<String, dynamic> userData, BuildContext context) {
+    Map<String, dynamic> userData,
+    BuildContext context,
+  ) {
     // display all users except current user
     if (userData['email'] != FirebaseAuth.instance.currentUser!.email) {
       return UserTile(
