@@ -14,7 +14,7 @@ class UserTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(
         leading: CircleAvatar(
-          radius: 24,
+          radius: 25,
           backgroundColor: Theme.of(context).colorScheme.primary,
           child: Icon(
             Icons.person,
@@ -34,7 +34,7 @@ class UserTile extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         trailing: Icon(
           Icons.arrow_forward_ios,
-          size: 15,
+          size: 20,
           color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
         ),
       ),
