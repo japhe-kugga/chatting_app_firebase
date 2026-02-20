@@ -30,5 +30,18 @@ This is a collaborative project developed by a dedicated team of 9 people. Each 
 ### ⚙️ Installation & Setup
 1. **Clone the project:**
    ```bash
+
+GROUP 08 MEMBERS
+ELADI JOSEPH NGOIYA-NIT/BCS/2023/573
+SAMWEL BALUHI CHARLES NIT/BCS/2023/599
+ANOLD ALPHA MGIMBA-NIT/BCS/2023/584
+JAPHET KUGA-NIT/BCS/2023/574
+PROTERY FINIAN NDITI-NIT/BCS/2023/494
+DANIUS DAUSON JOHN-NIT/BCS/2023/520
+EMMANUEL HENRY-NIT/BCS/2022/410
+ISSA KHAMIS- NIT/BCS/2023/526
+
+
+
    git clone (https://github.com/japhe_kugga/chatting_app_firebase.git)  
              " CHECK THIS LINK TO SEE OUR NICE PROJECT"
