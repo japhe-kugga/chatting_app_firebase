@@ -42,11 +42,11 @@ EMMANUEL HENRY-NIT/BCS/2022/410
 ISSA KHAMIS- NIT/BCS/2023/526
 
 
-<img src="chattingtask/login.png" width="40" height="60">
-<img src="chattingtask/register.png" width="40" height="60">
-<img src="chattingtask/home.png" width="40" height="60">
-<img src="chattingtask/profile.png" width="40" height="60">
-<img src="chattingtask/settings.png" width="40" height="60">
-<img src="chattingtask/chat.png" width="40" height="60">
+<img src="chattingtask/login.png" width="150" height="120">
+<img src="chattingtask/register.png" width="150" height="120">
+<img src="chattingtask/home.png" width="150" height="120">
+<img src="chattingtask/profile.png" width="150" height="120">
+<img src="chattingtask/settings.png" width="150" height="120">
+<img src="chattingtask/chat.png" width="150" height="120">
    git clone (https://github.com/japhe_kugga/chatting_app_firebase.git)  
              " CHECK THIS LINK TO SEE OUR NICE PROJECT"
